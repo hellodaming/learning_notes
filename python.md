@@ -3,20 +3,20 @@
 ## 1、Numpy
 __ndarray__：（n维数组对象），一个具有矢量算术运算和复杂广播能力的快速且节省时间的多维数组
 
-ndarray 是一种通用的__同构__数据多维容器 --> 即所有的元素必须数相同类型
+ndarray 是一种通用的__同构__数据多维容器 Out: 即所有的元素必须数相同类型
 
 ```python
 data =  [[1,2,3,4],[5,6,7,8,9], dtype=np.int64]
 arr = np.array(data)
 
--> aray([[1,2,3,4],
+Out: aray([[1,2,3,4],
         [5,6,7,8]])
 ```
 
 np.array 会尝试为新建的Numpy数组推断出一个合适的数据类型，类型保持在一个特殊的的dtype对象中
 ```Python
 arr.dtype
--> dtype('int64')
+Out: dtype('int64')
 ```
 
 显式转换
@@ -53,7 +53,7 @@ Series是一种类似于一维数组的对象，它由一组数据（各种Numpy
 ```Python
 obj = Series([4, 7, -5, 3])
 
--->
+Out:
 0 4
 1 7
 2 -5
@@ -62,14 +62,14 @@ obj = Series([4, 7, -5, 3])
 索引在左边，值在右边
 
 obj.values  #获取索引
---> array([4, 7, -5, 3])
+Out: array([4, 7, -5, 3])
 obj.index  #获取值
---> array([0, 1, 2, 3])
+Out: array([0, 1, 2, 3])
 
 obj2 = Series([4, 7, -5, 3], index=['d', 'b', 'a', 'c'])
 
 obj2['a']  # 通过索引获取Series的单个或者一组值
--->-5
+Out:-5
 obj2[['c','a']]
 
 obj2[obj2 > 0]
@@ -78,7 +78,7 @@ obj2[obj2 > 0]
 Series可以看成是一个定长的有序字典，因为它是索引值到数据值的一个映射
 ```
 'b' in obj2
---> True
+Out: True
 ```
 
 如果数据被存储在一个Python字典中，可以直接通过这个字典来创建Series
@@ -111,7 +111,7 @@ data = {'state' : ['a', 'b', 'c'],
 frame = DataFrame(data)
 
 frame2 = DataFrame(data, columns=['s', 'y', 'p'], index=['one', 'two', 'three'])
--->
+Out:
        s    y    p
 one    a   2010  1.3
 two    b   2011  2.9
@@ -128,7 +128,7 @@ axis=0代表往跨行（down)，而axis=1代表跨列（across)，作为方法�
 
 # 行也可以通过位置或名称的方式进行获取
 frame2.ix['three']
--->
+Out:
 s c
 y 2013
 p 1.4
@@ -143,7 +143,7 @@ pop = { 'Nevada': {2001:2.4, 2002:2.9},
 frame3 = DataFrame(pop)
 
 # 外层字典的键作为列，里层的键作为行索引
--->
+Out:
       Nevada  Ohio
 2000  NaN     1.5
 2001  2.4     1.7
@@ -161,7 +161,7 @@ frame3.columns.name = 'state'
 
 # values属性会以二维ndarry的形式返回DataFrame中的数据
 frame3.values
--->
+Out:
 array([NaN, 1.5],
       [2.4, 1.7],
       [2.9, 3.6])
@@ -176,9 +176,9 @@ Index功能类似一个固定大小的集合
 
 ```Python
 'Ohio' in frame3.columns
--->True
+Out:True
 2003 in frame3.index
--->False
+Out:False
 
 obj.reindex(['a','b','c', 'd'], fill_value=0)  #重新索引，并且缺失值填充
 
@@ -251,7 +251,7 @@ frame.sort_index(by= ['b', 'a']) # 按照某几列的值进行排序
 ```Python
 obj = Series([7, -5, 7, 4, 2, 0, 4])
 obj.rank()
--->
+Out:
 0 6.5
 1 1.0
 2 6.5
@@ -261,7 +261,7 @@ obj.rank()
 6 4.5
 
 obj.rank(method='first') # 破坏平级关系的method 'average', 'min', 'max', 'first'
--->
+Out:
 0 6
 1 1
 2 7
@@ -276,17 +276,17 @@ frame.rank(ascending=False, axis=1) #对整行进行排序
 pandas中轴的索引并__不一定是唯一__的！！！
 ```python
 obj = Series(range(5), index=['a', 'a', 'b', 'b']
--->
+Out:
 a 0
 a 1
 b 2
 b 3
 
 obj.index.is_unique
--->False
+Out:False
 
 obj.ix('b')
--->
+Out:
 b 2
 b 3
 ```
@@ -296,7 +296,7 @@ python统计分析
 df = DataFrame([1.4, np.nan], [7.1, -4.5], [np.nan, np.nan], [0.75, -1.3]], index=['a', 'b', 'c', 'd'], column=['one', 'two'])
 
 df.mean(axis=1, skipna=False) #按行进行求和，禁用跳过NA
--->
+Out:
 a NaN
 b 1.300
 c NaN
@@ -305,13 +305,13 @@ d -0.275
 
 #返回间接索引，这里是返回最大值的索引
 df.idxmax()
--->
+Out:
 one b
 two d
 
 #累加型
 df.cumsum()
--->
+Out:
   one  two
 a 1.4  NaN
 b 8.5  -4.5
@@ -352,11 +352,11 @@ df.corrwith(df2.column2)
 ```Python
 obj = Series(['c', 'a', 'd', 'a', 'b', 'b', 'c', 'c'])
 uniques = obj.uniques()
---> array([c, a, d, b], dtype=object)
+Out: array([c, a, d, b], dtype=object)
 uniques.sort()
 
 obj.value_counts()  #计算一个Series中各值出现的概率
--->
+Out:
 c 3
 a 3
 b 2
@@ -368,7 +368,7 @@ pd.value_counts(obj.values, sort=False)
 # isin 用于判断矢量化集合的成员资格，可用于选取Series或者DataFrame列中的子集
 mask = obj.isin(['b', 'c'])
 mask
--->
+Out:
 0 True
 1 False
 2 False
@@ -380,7 +380,7 @@ mask
 8 True
 
 obj[mask]
--->
+Out:
 0 c
 5 b
 6 b
