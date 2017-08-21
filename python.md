@@ -390,5 +390,51 @@ obj[mask]
 #对每一列进行value_counts
 result = df.apply(pd.value_counts).fillna(0)
 
-***
+dropna
+fillna
+isnull
+notnull
+```python
+form numpy import nan as NA
+data = Series([1, NA, 3.5 , NA, 7])
+data.dropna() #等价于 data[data.notnull()]
+[Out]:
+0 1.0
+2 3.5
+4 7.0
+
+对于Series，dropna返回一个仅含非空数据的索引值的Series。对于DataFrame，默认丢弃任何含有缺失值的行
+
+df.fillna({1:0.5, 3:-1}) #实现对不同的列填充不同的值，fillna默认返回新对象
+df.fillna(0, inplace=True) #就地进行修改，修改调用者对象而不产生副本
+
+data.fillna(data.mean())
+```
+
+
+层次化索引，能在一个轴上拥有多个（两个以上）索引级别。它使你能以低维度形式处理高维度数据
+```python
+data = Series(np.random.randn(10), index=[['a','a','a','b','b','b','c','c','d','d'],
+                                          [1,2,3,1,2,3,1,2,2,3]])
+[Out]:
+a 1 0.421
+  2 0.121
+  3 0,546
+b 1 0.912
+  2 0.153
+  3 0.712
+c 1 0.371
+  2 0.716
+d 2 0.731
+  3 0.461
+
+#间隔表示直接使用上面的标签
+
+data.index()
+[Out]:
+MultiIndex
+[('a',1),('a',2),('a',3),('b',1),('b',2),('b',3),('c',1),('c',2),('d',2),('d',3)]
+```
+
+
 ## 3、matplotlib
