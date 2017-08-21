@@ -389,6 +389,7 @@ obj[mask]
 
 #对每一列进行value_counts
 result = df.apply(pd.value_counts).fillna(0)
+```
 
 dropna
 fillna
@@ -419,7 +420,7 @@ data = Series(np.random.randn(10), index=[['a','a','a','b','b','b','c','c','d','
 [Out]:
 a 1 0.421
   2 0.121
-  3 0,546
+  3 0.546
 b 1 0.912
   2 0.153
   3 0.712
@@ -434,6 +435,66 @@ data.index()
 [Out]:
 MultiIndex
 [('a',1),('a',2),('a',3),('b',1),('b',2),('b',3),('c',1),('c',2),('d',2),('d',3)]
+
+data['b', 'c']
+data.ix[['b', 'd']]
+data[:, 2]
+```
+
+层次化索引在数据重塑和基于分组的操作（如透视表生成）中扮演着重要的角色。如上面数据可以通过其unstack方法被重新安排到一个DataFrame中
+```python
+data.unstack()
+[Out]:
+     1    2     3
+a 0.421 0.121 0.546
+b 0.912 0.153 0.712
+c 0.371 0.716  NaN
+d  NaN  0.731 0.461
+```
+unstack的逆运算是stack
+data.unstack().stack()
+
+对于DataFrame，每条轴（index， columns）都可以有分层索引，各层都可以有名字。但__不要将索引名称和轴标签混为一谈__
+```python
+#index两层的索引的名称
+frame.index.name = ['key1', 'key2']  
+#columns两层的索引的名称
+frame.columns.name = ['state', 'color']
+
+frame.swaplevel('key1', 'key2') #调换name为key1和key2的级别顺序，返回一个互换了级别的新对象（但数据不会发生改变）
+
+frame.swaplevel(0,1).sortlevel)(0) #交换级别的时候，常常用到sortlevel，这样的最终的结果就是有序的了
+```
+
+DataFrame的set_index函数会将其一个或者多个列转换为行索引，并创建一个新的Dataframe
+```python
+frame2 = frame.set_index(['c', 'd'], drop=False) #保留转化为索引的列，默认是删去的
+
+#reset_index的功能跟set_index相反，层次化索引的级别会被转移到列里面
+frame.reset_index()
+```
+
+
+pandas.merge可根据一个或者多个键将不同的DataFrame中的行连接起来
+pandas.concat可以沿一条轴将多个对象堆叠到一起
+```python
+pd.merge(df1, df2, on='key_name', how='inner')
+pd.merge(df1, df2, left_on='df1_key', right_on='df2_key', how='outer') #外连接
+pd.merge(df1, df2, on='key_name', suffixes=('_left','_right')) #对重复列名重命名
+```
+
+有时，DataFrame中连接键位于其索引中，在这种情况下，可以传入left_index=True或right_index=True（或者两个都传）以说明索引应该被用作连接键
+```python
+pd.merge(left1, right1, left_on='key', right_index=True)
+pd.merge(left1, right1, left_on='key', right_index=True, how='outer')
+pd.merge(lefth, righth, left_on=['key1','key2'], right_index=True) # righth有2个层次索引
+pd.merge(left2, right2, how='outer', left_index=True, right_index=True) #合并双方索引
+```
+
+DataFrame中有一个join的实例方法，它能更为方便地实现按索引合并。它还可以用于合并多个带有相同或相似索引的DataFrame对象，而不管它们之间有没有重叠的列。
+```python
+#等价于上面这个
+left2.join(right2, how='outer')
 ```
 
 
