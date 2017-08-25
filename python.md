@@ -474,6 +474,8 @@ frame2 = frame.set_index(['c', 'd'], drop=False) #保留转化为索引的列，
 frame.reset_index()
 ```
 
+*****
+###数据规整化
 
 pandas.merge可根据一个或者多个键将不同的DataFrame中的行连接起来
 pandas.concat可以沿一条轴将多个对象堆叠到一起
@@ -491,11 +493,15 @@ pd.merge(lefth, righth, left_on=['key1','key2'], right_index=True) # righth有2�
 pd.merge(left2, right2, how='outer', left_index=True, right_index=True) #合并双方索引
 ```
 
-DataFrame中有一个join的实例方法，它能更为方便地实现按索引合并。它还可以用于合并多个带有相同或相似索引的DataFrame对象，而不管它们之间有没有重叠的列。
+DataFrame中有一个join的实例方法，它能更为方便地实现按索引合并。它还可以用于合并多个带有相同或相似索引的DataFrame对象，而不管它们之间有没有重叠的列。join默认是左连接
 ```python
 #等价于上面这个
-left2.join(right2, how='outer')
+left2.join(right2, how='outer')  #根据索引连接
+left1.join(right1, on='key_name') #根据key_name进行连接
 ```
+
+也可以向join传入一组DataFrame（其实concat更通用）
+
 
 
 ## 3、matplotlib
